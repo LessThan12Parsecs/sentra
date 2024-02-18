@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/screenshot.png" alt="Sentra Logo" style="width:40%; height:40%;">
+</p>
 
 # Sentra
 
