@@ -25,5 +25,5 @@ Go for it!
 
 ## License
 
-Sentra is distributed under the [MIT License](./LICENSE). 
+Sentra is distributed under the [MIT License](./LICENSE.txt). 
 
