@@ -9,6 +9,7 @@ Sentra is a work-in-progress cross-platform desktop application designed to empo
 ## Key Features
 * [x] **Minimalist Timer:** A clean, distraction-free timer to set focused work sessions.
 * [x] **Always on top:** Draggable, small windows that stays always on top. 
+* [ ] **Distraction Awareness**: {Brainstorming this one}
 
 
 ## Built for Efficiency 
