@@ -28,7 +28,7 @@
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
-      "copyright": "",
+      "copyright": "Emanuel Ramirez",
       "deb": {
         "depends": []
       },
