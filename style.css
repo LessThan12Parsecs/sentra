@@ -1,0 +1,59 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+
+}
+.selectLayer {
+  height: 100%;
+  background: rgba(50, 157, 163, 0);
+  user-select: none;
+  display: flex;
+  justify-content: center; /* Adjusted to center */
+  align-items: center; /* Added to vertically center */
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: center ;
+  right: 0;
+}
+input[type="text"] {
+  padding: 8px;
+  margin: 0 auto; /* Adjusted margin to auto for centering */
+  box-sizing: border-box;
+  background-color: #2424243c;
+  display: block;
+  text-align: center;
+  width: fit-content;
+  font-size: 18px; /* Increased font size for better readability */
+  border: 0px solid #ccc; /* Example border - adjust as needed */
+  outline: none;
+} 
+
+/* Ensuring the input field looks the same when focused */
+input[type="text"]:focus {
+  border: 0px solid #ccc; /* Match the unfocused state */
+  background-color: #2424243c; /* Match the unfocused state */
+  /* Add any other properties to match the unfocused state */
+}
