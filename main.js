@@ -5,6 +5,8 @@ import fragmentShader from './shaders/fragment.glsl'
 import nlp from 'compromise'
 import plg from 'compromise-dates'
 nlp.plugin(plg)
+import { currentMonitor, appWindow, PhysicalPosition } from '@tauri-apps/api/window';
+
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -31,7 +33,7 @@ scene.add(plane)
 camera.position.z = 5
 
 let lastTime = 0; // Initialize lastTime for deltaTime calculation
-function animate(time = 0) {
+async function animate(time = 0) {
   const deltaTime = time - lastTime; // Calculate deltaTime
   lastTime = time; // Update lastTime for the next frame
 
@@ -39,16 +41,32 @@ function animate(time = 0) {
     const elapsedTime = Date.now() - startTime;
     if (elapsedTime < taskDuration) {
       material.uniforms.time.value += deltaTime * 0.001; // Update time based on deltaTime
-      console.log('time:', material.uniforms.time.value)
-      console.log('duration:',material.uniforms.duration.value)
     } else {
+      try {
+        await appWindow.center();
+      } catch (error) {
+        console.error(error);
+      }
       running = false; // Stop updating time after task duration
     }
   }
-
   requestAnimationFrame(animate)
   renderer.render(scene, camera)
 }
+
+async function moveToMonitorBottomRight() {
+  const monitor = await currentMonitor()
+  const monitorWidth = monitor.size.width;
+  const monitorHeight = monitor.size.height;
+
+  const size = await appWindow.innerSize();
+
+  const newX = monitorWidth - size.width; 
+  const newY = monitorHeight - size.height;
+  const newPos = new PhysicalPosition(newX,newY);
+  await appWindow.setPosition(newPos); 
+}
+
 
 // Handle window resize
 function onWindowResize() {
@@ -79,6 +97,7 @@ document.getElementById('myTextInput').addEventListener('keypress', function(eve
       this.value = task
       startTime = Date.now()
       running = true
+      moveToMonitorBottomRight()
       material.uniforms.time.value = 0.0
       material.uniforms.duration.value = taskDuration
     }
