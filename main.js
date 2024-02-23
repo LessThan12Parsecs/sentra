@@ -87,19 +87,34 @@ let running = false
 let startTime = 0
 let taskDuration = 0 // Duration in milliseconds
 
-document.getElementById('myTextInput').addEventListener('keypress', function(event) {
+document.getElementById('myTextInput').addEventListener('keypress', async function(event) {
   if (event.key === 'Enter') {
-    let duration = nlp(this.value).durations().json()[0]
-    if (duration) {
-      let task = this.value.replace(new RegExp(`for\\s*${duration.text}`, 'i'), '').trim()
-      taskDuration = (((duration.duration.week || 0) * 604800 + (duration.duration.day || 0) * 86400
-       + (duration.duration.hour || 0) * 3600 + (duration.duration.minute || 0) * 60 + (duration.duration.second || 0)) * 1000)
-      this.value = task
-      startTime = Date.now()
-      running = true
-      moveToMonitorBottomRight()
-      material.uniforms.time.value = 0.0
-      material.uniforms.duration.value = taskDuration
+    const processInput = (endTime, duration) => {
+      let taskDurationMs = 0;
+      let task = '';
+      if (endTime) {
+        task = this.value.replace(endTime.text, '').trim();
+        taskDurationMs = new Date(endTime.dates.end).getTime() - Date.now();
+      } else if (duration) {
+        task = this.value.replace(new RegExp(`for\\s*${duration.text}`, 'i'), '').trim();
+        taskDurationMs = (((duration.duration.week || 0) * 604800 + (duration.duration.day || 0) * 86400
+          + (duration.duration.hour || 0) * 3600 + (duration.duration.minute || 0) * 60 + (duration.duration.second || 0)) * 1000);
+      }
+      return { task, taskDurationMs };
+    };
+
+    let endTime = nlp(this.value).dates().json()[0];
+    let duration = nlp(this.value).durations().json()[0];
+    const { task, taskDurationMs } = processInput(endTime, duration);
+
+    if (taskDurationMs > 0) {
+      this.value = task;
+      taskDuration = taskDurationMs;
+      startTime = Date.now();
+      running = true;
+      await moveToMonitorBottomRight();
+      material.uniforms.time.value = 0.0;
+      material.uniforms.duration.value = taskDuration;
     }
   }
 })
