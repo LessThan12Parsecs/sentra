@@ -30,7 +30,7 @@ void main() {
         gl_FragColor = vec4(color, 1.0); // Use alpha for circular shape
     }
     else {
-        gl_FragColor = vec4(color, 0.9);
+        gl_FragColor = vec4(color, 0.95);
     }
 }
 
