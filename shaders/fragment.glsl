@@ -4,11 +4,7 @@ uniform float duration;
 
 void main() {
     float progress = time / (duration * 0.001); // Calculate how close we are to the duration
-    if (progress >= 0.99){
-        gl_FragColor = vec4(1.0,1.0,1.0,1.0);
-    }
-    else {
-        vec2 position = (gl_FragCoord.xy / resolution.xy) - 0.5;
+    vec2 position = (gl_FragCoord.xy / resolution.xy) - 0.5;
         position *= 2.0; // Scale position to range from -1 to 1
         float distance = length(position); // Calculate distance from center
 
@@ -25,9 +21,16 @@ void main() {
 
         // Scale the color intensity from 0 to full based on progress
         color *= progress;
-
         // Output the final color
-        gl_FragColor = vec4(color, 1.0);
+    if (progress >= 0.99){
+       float red = sin(1.0 * (1.3 + progress) + position.x * 6.2831) * 0.5 + 0.5;
+        float green = sin(1.0 * (1.7 + progress) + position.y * 6.2831) * 0.5 + 0.5;
+        float blue = sin(1.0 * (2.1 + progress) + distance * 12.566) * 0.5 + 0.5;
+        vec3 color = vec3(red, green, blue);
+        gl_FragColor = vec4(color, 1.0); // Use alpha for circular shape
+    }
+    else {
+        gl_FragColor = vec4(color, 0.9);
     }
 }
 

@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "sentra",
-    "version": "0.1.3"
+    "version": "0.1.4"
   },
   "tauri": {
     "allowlist": {
@@ -24,7 +24,8 @@
         "unminimize": true,
         "startDragging": true,
         "setPosition": true,
-        "center": true
+        "center": true,
+        "setSize":true
       }
     },
     "bundle": {
@@ -52,7 +53,7 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
+      "shortDescription": "monotasking ftw",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -69,14 +70,16 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 250,
+        "height": 200,
         "resizable": true,
         "title": "sentra",
-        "width": 250,
+        "width": 200,
         "alwaysOnTop": true,
         "hiddenTitle": true,
-        "decorations": false
+        "decorations": false,
+        "transparent": true
       }
-    ]
+    ],
+    "macOSPrivateApi": true
   }
 }

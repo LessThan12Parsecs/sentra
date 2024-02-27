@@ -5,12 +5,13 @@ import fragmentShader from './shaders/fragment.glsl'
 import nlp from 'compromise'
 import plg from 'compromise-dates'
 nlp.plugin(plg)
-import { currentMonitor, appWindow, PhysicalPosition } from '@tauri-apps/api/window';
+import { currentMonitor, appWindow, PhysicalPosition, PhysicalSize } from '@tauri-apps/api/window';
 
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer({ alpha: true }) // Enable transparency
+
 
 renderer.setSize(window.innerWidth, window.innerHeight)
 renderer.setClearColor(0x000000, 0) // Set clear color to black with 0 opacity
@@ -44,6 +45,7 @@ async function animate(time = 0) {
     } else {
       try {
         await appWindow.center();
+        await windowResetSize();
       } catch (error) {
         console.error(error);
       }
@@ -68,7 +70,7 @@ async function moveToMonitorBottomRight() {
 }
 
 
-// Handle window resize
+// Handle window resize3
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
@@ -79,7 +81,20 @@ function onWindowResize() {
   geometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight)
   plane = new THREE.Mesh(geometry, material)
   scene.add(plane)
+  
 }
+
+// Ugly workaround to the border no being rendered correctly. I think it might be a tauri/web renderer issue
+async function windowResetSize(){
+  const size = await appWindow.innerSize();
+  // Trigger a resize to the same size, effectively forcing a re-render
+  await appWindow.setSize(new PhysicalSize(size.width * 2, size.height));
+  await appWindow.setSize(new PhysicalSize(size.width, size.height)); 
+}
+window.addEventListener('DOMContentLoaded', async () => {
+  windowResetSize();
+});
+
 
 window.addEventListener('resize', onWindowResize)
 
