@@ -7,11 +7,11 @@ import plg from 'compromise-dates'
 nlp.plugin(plg)
 import { currentMonitor, appWindow, PhysicalPosition, PhysicalSize } from '@tauri-apps/api/window';
 
-
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer({ alpha: true }) // Enable transparency
-
+let lastPosition = await getBottomRightPosition(); // Variable that holds the last position of the window pre-centered, it initializes to bottom right.
+let centerPos = await appWindow.innerPosition();
 
 renderer.setSize(window.innerWidth, window.innerHeight)
 renderer.setClearColor(0x000000, 0) // Set clear color to black with 0 opacity
@@ -32,6 +32,8 @@ let plane = new THREE.Mesh(geometry, material)
 scene.add(plane)
 
 camera.position.z = 5
+
+windowResetSize();
 
 let lastTime = 0; // Initialize lastTime for deltaTime calculation
 async function animate(time = 0) {
@@ -56,19 +58,28 @@ async function animate(time = 0) {
   renderer.render(scene, camera)
 }
 
-async function moveToMonitorBottomRight() {
+async function moveToPosition(pos) {
+  await appWindow.setPosition(pos); 
+}
+
+async function getBottomRightPosition(){
   const monitor = await currentMonitor()
   const monitorWidth = monitor.size.width;
   const monitorHeight = monitor.size.height;
-
   const size = await appWindow.innerSize();
-
   const newX = monitorWidth - size.width; 
   const newY = monitorHeight - size.height;
-  const newPos = new PhysicalPosition(newX,newY);
-  await appWindow.setPosition(newPos); 
+  const bottomRight = new PhysicalPosition(newX,newY);
+  return bottomRight;
 }
 
+appWindow.onMoved(async () => {
+  let newPos = await appWindow.innerPosition();
+  if (newPos.x === centerPos.x && newPos.y === centerPos.y){
+    return;
+  }
+  lastPosition = newPos;
+});
 
 // Handle window resize3
 function onWindowResize() {
@@ -88,13 +99,9 @@ function onWindowResize() {
 async function windowResetSize(){
   const size = await appWindow.innerSize();
   // Trigger a resize to the same size, effectively forcing a re-render
-  await appWindow.setSize(new PhysicalSize(size.width * 2, size.height));
+  await appWindow.setSize(new PhysicalSize(size.width * 2, size.height * 1.5));
   await appWindow.setSize(new PhysicalSize(size.width, size.height)); 
 }
-window.addEventListener('DOMContentLoaded', async () => {
-  windowResetSize();
-});
-
 
 window.addEventListener('resize', onWindowResize)
 
@@ -127,7 +134,7 @@ document.getElementById('myTextInput').addEventListener('keypress', async functi
       taskDuration = taskDurationMs;
       startTime = Date.now();
       running = true;
-      await moveToMonitorBottomRight();
+      await moveToPosition(lastPosition);
       material.uniforms.time.value = 0.0;
       material.uniforms.duration.value = taskDuration;
     }
