@@ -23,7 +23,7 @@ Built with Tauri, Vite and Three.js Shaders
 
 ## Usage
 
-1. Just type your task and time in natural language "World domination for 10 minutes" or "AGI for 1h"  and hit enter.
+1. Just type your task and time in natural language "World domination for 10 minutes" or "Building AGI for 1h"  and hit enter.
 
 ## Contributing
 
