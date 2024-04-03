@@ -12,8 +12,7 @@ Sentra is a work-in-progress cross-platform desktop application designed to empo
 * [X] **Always on top:** Draggable, small windows that stays always on top. 
 * [ ] **Choose between different effects:**
 * [ ] **Play and Pause:**
-* [ ] **Distraction Awareness**: {Brainstorming this one}
-
+* [ ] **Distraction Awareness**: {Brainstorming this one} - First PoC: Screenshot -> Local vision model removes private info -> rest is sent to claude/openai for content analysis and determining if it's on topic with the task. If not, then messages try to nudge you back.
 
 ## Built for Efficiency 
 
